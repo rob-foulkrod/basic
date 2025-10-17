@@ -18,23 +18,19 @@ public class EquipmentService
     private readonly List<MaintenanceRecord> _maintenanceRecords = new();
     private int _nextEquipmentId = 1;
     private int _nextMaintenanceId = 1;
-    private readonly IValidationContext _validationContext = new ValidationContext();
+    private readonly IValidationContext _validationContext;
 
     /// <summary>
-    /// Initializes a new instance of the EquipmentService class and populates it with sample data.
+    /// Initializes a new instance of the EquipmentService class with the specified validation context
+    /// and populates it with sample data.
     /// </summary>
-    public EquipmentService()
+    /// <param name="validationContext">The validation context to use for equipment validation.</param>
+    /// <exception cref="ArgumentNullException">Thrown when validationContext is null.</exception>
+    public EquipmentService(IValidationContext validationContext)
     {
-        InitializeValidationStrategies();
+        ArgumentNullException.ThrowIfNull(validationContext, nameof(validationContext));
+        _validationContext = validationContext;
         SeedData();
-    }
-
-    /// <summary>
-    /// Initializes and registers all validation strategies with the validation context.
-    /// </summary>
-    private void InitializeValidationStrategies()
-    {
-        _validationContext.RegisterStrategy("SerialNumber", new SerialNumberValidationStrategy(_equipments));
     }
 
     private void SeedData()

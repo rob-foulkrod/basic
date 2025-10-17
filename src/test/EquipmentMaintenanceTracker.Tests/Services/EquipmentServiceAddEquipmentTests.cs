@@ -1,14 +1,27 @@
 using EquipmentMaintenanceTracker.Models;
 using EquipmentMaintenanceTracker.Services;
+using EquipmentMaintenanceTracker.Validation;
+using EquipmentMaintenanceTracker.Validation.Strategies;
 
 namespace EquipmentMaintenanceTracker.Tests.Services;
 
 public class EquipmentServiceAddEquipmentTests
 {
+    /// <summary>
+    /// Creates a properly configured EquipmentService with validation context and strategies.
+    /// </summary>
+    private static EquipmentService CreateEquipmentService()
+    {
+        var validationContext = new ValidationContext();
+        var service = new EquipmentService(validationContext);
+        validationContext.RegisterStrategy("SerialNumber", new SerialNumberValidationStrategy(service.GetAllEquipment()));
+        return service;
+    }
+
     [Fact]
     public void AddEquipment_WithValidEquipment_ShouldAssignIdAndAddToList()
     {
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment = new Equipment
         {
             Name = "Test Equipment",
@@ -29,7 +42,7 @@ public class EquipmentServiceAddEquipmentTests
     [Fact]
     public void AddEquipment_WithNullEquipment_ShouldThrowArgumentNullException()
     {
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
 
         var exception = Assert.Throws<ArgumentNullException>(() => service.AddEquipment(null!));
 
@@ -45,7 +58,7 @@ public class EquipmentServiceAddEquipmentTests
     [Fact]
     public void AddEquipment_MultipleEquipments_ShouldAssignIncrementingIds()
     {
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment1 = new Equipment
         {
             Name = "Equipment 1",
@@ -77,7 +90,7 @@ public class EquipmentServiceAddEquipmentTests
     [Fact]
     public void AddEquipment_AfterServiceInitialization_ShouldContinueFromLastId()
     {
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var existingEquipmentCount = service.GetAllEquipment().Count;
         var lastExistingId = service.GetAllEquipment().Max(e => e.Id);
         
