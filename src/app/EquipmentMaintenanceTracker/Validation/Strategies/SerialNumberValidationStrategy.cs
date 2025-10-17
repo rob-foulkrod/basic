@@ -1,7 +1,7 @@
 using EquipmentMaintenanceTracker.Models;
 using System.Text.RegularExpressions;
 
-namespace EquipmentMaintenanceTracker.Validation;
+namespace EquipmentMaintenanceTracker.Validation.Strategies;
 
 /// <summary>
 /// Validates serial number format, uniqueness, and compliance with organizational standards.

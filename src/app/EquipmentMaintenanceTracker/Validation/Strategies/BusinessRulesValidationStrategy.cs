@@ -1,6 +1,6 @@
 using EquipmentMaintenanceTracker.Models;
 
-namespace EquipmentMaintenanceTracker.Validation;
+namespace EquipmentMaintenanceTracker.Validation.Strategies;
 
 /// <summary>
 /// Validates equipment records against business-specific rules and organizational policies.
