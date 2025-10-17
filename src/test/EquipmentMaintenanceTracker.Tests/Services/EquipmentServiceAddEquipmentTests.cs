@@ -29,11 +29,15 @@ public class EquipmentServiceAddEquipmentTests
     [Fact]
     public void AddEquipment_WithNullEquipment_ShouldThrowArgumentNullException()
     {
+        // Arrange
         var service = new EquipmentService();
 
-        var exception = Assert.Throws<NullReferenceException>(() => service.AddEquipment(null!));
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentNullException>(() => service.AddEquipment(null!));
 
         Assert.NotNull(exception);
+        Assert.Equal("equipment", exception.ParamName);
+        Assert.Contains("Equipment cannot be null", exception.Message);
     }
 
 

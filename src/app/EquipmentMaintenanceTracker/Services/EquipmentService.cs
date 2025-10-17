@@ -56,9 +56,15 @@ public class EquipmentService
     /// by this call (its <c>Id</c> is changed). This method is not guaranteed to be thread-safe; callers should
     /// synchronize access if multiple threads may call it concurrently.
     /// </remarks>
-    /// <exception cref="System.NullReferenceException">Thrown if <paramref name="equipment"/> is <c>null</c>.</exception>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="equipment"/> is <c>null</c>.</exception>
     public void AddEquipment(Equipment equipment)
     {
+        // Validate that equipment is not null to provide clear error message
+        if (equipment == null)
+        {
+            throw new ArgumentNullException(nameof(equipment), "Equipment cannot be null.");
+        }
+
         equipment.Id = _nextEquipmentId++;
         _equipments.Add(equipment);
     }
@@ -168,7 +174,7 @@ public class EquipmentService
     /// The method sets <c>record.Id</c> using the service's internal counter and adds the record to the collection.
     /// The passed instance is mutated by this call (its <c>Id</c> is changed).
     /// </remarks>
-    /// <exception cref="System.NullReferenceException">Thrown if <paramref name="record"/> is <c>null</c>.</exception>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="record"/> is <c>null</c>.</exception>
     /// <example>
     /// <code>
     /// var service = new EquipmentService();
@@ -186,6 +192,12 @@ public class EquipmentService
     /// </example>
     public void AddMaintenanceRecord(MaintenanceRecord record)
     {
+        // Validate that record is not null to provide clear error message
+        if (record == null)
+        {
+            throw new ArgumentNullException(nameof(record), "Maintenance record cannot be null.");
+        }
+
         record.Id = _nextMaintenanceId++;
         _maintenanceRecords.Add(record);
     }
