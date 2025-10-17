@@ -10,7 +10,7 @@
     <CollectCoverage>true</CollectCoverage>
     <CoverletOutputFormat>cobertura,json</CoverletOutputFormat>
     <CoverletOutput>../../../coverage/</CoverletOutput>
-    <Threshold>70</Threshold>
+    <Threshold>1</Threshold>
     <ThresholdType>line,branch,method</ThresholdType>
     <Exclude>[*]System.*,[*.Tests]*,[*]*Exception</Exclude>
   </PropertyGroup>

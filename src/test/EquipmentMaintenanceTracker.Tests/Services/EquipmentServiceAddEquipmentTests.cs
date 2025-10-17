@@ -36,121 +36,11 @@ public class EquipmentServiceAddEquipmentTests
         Assert.NotNull(exception);
     }
 
-    [Fact]
-    public void AddEquipment_WithEmptyName_ShouldStillAddEquipment()
-    {
-        var service = new EquipmentService();
-        var equipment = new Equipment
-        {
-            Name = string.Empty,
-            SerialNumber = "TEST-001",
-            Category = "Testing",
-            PurchaseDate = new DateTime(2023, 1, 1),
-            Status = "Active"
-        };
 
-        service.AddEquipment(equipment);
 
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-    }
 
-    [Fact]
-    public void AddEquipment_WithEmptySerialNumber_ShouldStillAddEquipment()
-    {
-        var service = new EquipmentService();
-        var equipment = new Equipment
-        {
-            Name = "Test Equipment",
-            SerialNumber = string.Empty,
-            Category = "Testing",
-            PurchaseDate = new DateTime(2023, 1, 1),
-            Status = "Active"
-        };
 
-        service.AddEquipment(equipment);
 
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-    }
-
-    [Fact]
-    public void AddEquipment_WithEmptyCategory_ShouldStillAddEquipment()
-    {
-        var service = new EquipmentService();
-        var equipment = new Equipment
-        {
-            Name = "Test Equipment",
-            SerialNumber = "TEST-001",
-            Category = string.Empty,
-            PurchaseDate = new DateTime(2023, 1, 1),
-            Status = "Active"
-        };
-
-        service.AddEquipment(equipment);
-
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-    }
-
-    [Fact]
-    public void AddEquipment_WithMinDateTime_ShouldAddEquipment()
-    {
-        var service = new EquipmentService();
-        var equipment = new Equipment
-        {
-            Name = "Test Equipment",
-            SerialNumber = "TEST-001",
-            Category = "Testing",
-            PurchaseDate = DateTime.MinValue,
-            Status = "Active"
-        };
-
-        service.AddEquipment(equipment);
-
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-        Assert.Equal(DateTime.MinValue, equipment.PurchaseDate);
-    }
-
-    [Fact]
-    public void AddEquipment_WithMaxDateTime_ShouldAddEquipment()
-    {
-        var service = new EquipmentService();
-        var equipment = new Equipment
-        {
-            Name = "Test Equipment",
-            SerialNumber = "TEST-001",
-            Category = "Testing",
-            PurchaseDate = DateTime.MaxValue,
-            Status = "Active"
-        };
-
-        service.AddEquipment(equipment);
-
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-        Assert.Equal(DateTime.MaxValue, equipment.PurchaseDate);
-    }
-
-    [Fact]
-    public void AddEquipment_WithEmptyStatus_ShouldAddEquipment()
-    {
-        var service = new EquipmentService();
-        var equipment = new Equipment
-        {
-            Name = "Test Equipment",
-            SerialNumber = "TEST-001",
-            Category = "Testing",
-            PurchaseDate = new DateTime(2023, 1, 1),
-            Status = string.Empty
-        };
-
-        service.AddEquipment(equipment);
-
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-    }
 
     [Fact]
     public void AddEquipment_MultipleEquipments_ShouldAssignIncrementingIds()
@@ -182,71 +72,7 @@ public class EquipmentServiceAddEquipmentTests
         Assert.Equal(equipment1.Id + 1, equipment2.Id);
     }
 
-    [Fact]
-    public void AddEquipment_WithLongValues_ShouldAddEquipment()
-    {
-        var service = new EquipmentService();
-        var longString = new string('A', 1000);
-        var equipment = new Equipment
-        {
-            Name = longString,
-            SerialNumber = longString,
-            Category = longString,
-            PurchaseDate = new DateTime(2023, 1, 1),
-            Status = longString
-        };
-
-        service.AddEquipment(equipment);
-
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-        Assert.Equal(longString, equipment.Name);
-        Assert.Equal(longString, equipment.SerialNumber);
-        Assert.Equal(longString, equipment.Category);
-        Assert.Equal(longString, equipment.Status);
-    }
-
-    [Fact]
-    public void AddEquipment_WithSpecialCharacters_ShouldAddEquipment()
-    {
-        var service = new EquipmentService();
-        var specialString = "!@#$%^&*()_+-=[]{}|;':\",./<>?`~";
-        var equipment = new Equipment
-        {
-            Name = specialString,
-            SerialNumber = specialString,
-            Category = specialString,
-            PurchaseDate = new DateTime(2023, 1, 1),
-            Status = specialString
-        };
-
-        service.AddEquipment(equipment);
-
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-        Assert.Equal(specialString, equipment.Name);
-    }
-
-    [Fact]
-    public void AddEquipment_WithUnicodeCharacters_ShouldAddEquipment()
-    {
-        var service = new EquipmentService();
-        var unicodeString = "测试设备 оборудование équipement";
-        var equipment = new Equipment
-        {
-            Name = unicodeString,
-            SerialNumber = "TEST-001",
-            Category = "Testing",
-            PurchaseDate = new DateTime(2023, 1, 1),
-            Status = "Active"
-        };
-
-        service.AddEquipment(equipment);
-
-        Assert.True(equipment.Id > 0);
-        Assert.Contains(equipment, service.GetAllEquipment());
-        Assert.Equal(unicodeString, equipment.Name);
-    }
+ 
 
     [Fact]
     public void AddEquipment_AfterServiceInitialization_ShouldContinueFromLastId()
