@@ -1,5 +1,6 @@
 ﻿using EquipmentMaintenanceTracker.Models;
 using EquipmentMaintenanceTracker.Services;
+using EquipmentMaintenanceTracker.Validation;
 
 namespace EquipmentMaintenanceTracker;
 
@@ -144,8 +145,15 @@ class Program
             Status = "Active"
         };
 
-        _service.AddEquipment(equipment);
-        Console.WriteLine("\nEquipment added successfully!");
+        try
+        {
+            _service.AddEquipment(equipment);
+            Console.WriteLine("\nEquipment added successfully!");
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n❌ Validation error: {ex.Message}");
+        }
     }
 
     static void ViewEquipmentDetails()

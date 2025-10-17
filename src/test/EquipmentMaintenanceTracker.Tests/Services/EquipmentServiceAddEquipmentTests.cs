@@ -31,7 +31,7 @@ public class EquipmentServiceAddEquipmentTests
     {
         var service = new EquipmentService();
 
-        var exception = Assert.Throws<NullReferenceException>(() => service.AddEquipment(null!));
+        var exception = Assert.Throws<ArgumentNullException>(() => service.AddEquipment(null!));
 
         Assert.NotNull(exception);
     }
