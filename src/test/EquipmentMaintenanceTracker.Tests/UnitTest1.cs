@@ -1,15 +1,28 @@
 ﻿using EquipmentMaintenanceTracker.Models;
 using EquipmentMaintenanceTracker.Services;
+using EquipmentMaintenanceTracker.Validation;
+using EquipmentMaintenanceTracker.Validation.Strategies;
 
 namespace EquipmentMaintenanceTracker.Tests;
 
 public class EquipmentServiceTests
 {
+    /// <summary>
+    /// Creates a properly configured EquipmentService with validation context and strategies.
+    /// </summary>
+    private static EquipmentService CreateEquipmentService()
+    {
+        var validationContext = new ValidationContext();
+        var service = new EquipmentService(validationContext);
+        validationContext.RegisterStrategy("SerialNumber", new SerialNumberValidationStrategy(service.GetAllEquipment()));
+        return service;
+    }
+
     [Fact]
     public void AddEquipment_ShouldAddEquipmentWithUniqueId()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment = new Equipment
         {
             Name = "Test Equipment",
@@ -33,7 +46,7 @@ public class EquipmentServiceTests
     public void GetAllEquipment_ShouldReturnAllEquipment()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
 
         // Act
         var equipments = service.GetAllEquipment();
@@ -47,7 +60,7 @@ public class EquipmentServiceTests
     public void GetEquipmentById_ShouldReturnCorrectEquipment()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment = new Equipment
         {
             Name = "Test Equipment",
@@ -71,7 +84,7 @@ public class EquipmentServiceTests
     public void GetEquipmentById_ShouldReturnNullForNonExistentId()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
 
         // Act
         var result = service.GetEquipmentById(9999);
@@ -84,7 +97,7 @@ public class EquipmentServiceTests
     public void UpdateEquipment_ShouldUpdateExistingEquipment()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment = new Equipment
         {
             Name = "Original Name",
@@ -111,7 +124,7 @@ public class EquipmentServiceTests
     public void DeleteEquipment_ShouldRemoveEquipmentAndRelatedRecords()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment = new Equipment
         {
             Name = "Test Equipment",
@@ -135,7 +148,7 @@ public class EquipmentServiceTests
     public void AddMaintenanceRecord_ShouldAddRecordWithUniqueId()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment = new Equipment
         {
             Name = "Test Equipment",
@@ -170,7 +183,7 @@ public class EquipmentServiceTests
     public void GetMaintenanceRecordsByEquipmentId_ShouldReturnOnlyRecordsForSpecifiedEquipment()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment1 = new Equipment
         {
             Name = "Equipment 1",
@@ -222,7 +235,7 @@ public class EquipmentServiceTests
     public void GetAllMaintenanceRecords_ShouldReturnAllRecords()
     {
         // Arrange
-        var service = new EquipmentService();
+        var service = CreateEquipmentService();
         var equipment = new Equipment
         {
             Name = "Test Equipment",

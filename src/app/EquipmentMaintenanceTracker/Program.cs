@@ -1,16 +1,33 @@
 ﻿using EquipmentMaintenanceTracker.Models;
 using EquipmentMaintenanceTracker.Services;
+using EquipmentMaintenanceTracker.Validation;
+using EquipmentMaintenanceTracker.Validation.Strategies;
 
 namespace EquipmentMaintenanceTracker;
 
 class Program
 {
-    private static readonly EquipmentService _service = new();
+    private static readonly EquipmentService _service = CreateEquipmentService();
 
     static void Main(string[] args)
     {
         Console.WriteLine("=== Equipment Maintenance Tracker ===\n");
         RunMainMenu();
+    }
+
+    /// <summary>
+    /// Creates and configures the EquipmentService with validation strategies.
+    /// </summary>
+    /// <returns>A configured EquipmentService instance.</returns>
+    private static EquipmentService CreateEquipmentService()
+    {
+        var validationContext = new ValidationContext();
+        var service = new EquipmentService(validationContext);
+        
+        // Register validation strategies after service creation so they can access the equipment list
+        validationContext.RegisterStrategy("SerialNumber", new SerialNumberValidationStrategy(service.GetAllEquipment()));
+        
+        return service;
     }
 
     /// <summary>
@@ -144,8 +161,15 @@ class Program
             Status = "Active"
         };
 
-        _service.AddEquipment(equipment);
-        Console.WriteLine("\nEquipment added successfully!");
+        try
+        {
+            _service.AddEquipment(equipment);
+            Console.WriteLine("\nEquipment added successfully!");
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n❌ Validation error: {ex.Message}");
+        }
     }
 
     static void ViewEquipmentDetails()

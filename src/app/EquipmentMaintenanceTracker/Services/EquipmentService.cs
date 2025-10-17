@@ -1,4 +1,6 @@
 using EquipmentMaintenanceTracker.Models;
+using EquipmentMaintenanceTracker.Validation;
+using EquipmentMaintenanceTracker.Validation.Strategies;
 
 namespace EquipmentMaintenanceTracker.Services;
 
@@ -16,12 +18,18 @@ public class EquipmentService
     private readonly List<MaintenanceRecord> _maintenanceRecords = new();
     private int _nextEquipmentId = 1;
     private int _nextMaintenanceId = 1;
+    private readonly IValidationContext _validationContext;
 
     /// <summary>
-    /// Initializes a new instance of the EquipmentService class and populates it with sample data.
+    /// Initializes a new instance of the EquipmentService class with the specified validation context
+    /// and populates it with sample data.
     /// </summary>
-    public EquipmentService()
+    /// <param name="validationContext">The validation context to use for equipment validation.</param>
+    /// <exception cref="ArgumentNullException">Thrown when validationContext is null.</exception>
+    public EquipmentService(IValidationContext validationContext)
     {
+        ArgumentNullException.ThrowIfNull(validationContext, nameof(validationContext));
+        _validationContext = validationContext;
         SeedData();
     }
 
@@ -47,6 +55,30 @@ public class EquipmentService
     }
 
     /// <summary>
+    /// Validates equipment using all registered validation strategies.
+    /// </summary>
+    /// <param name="equipment">The equipment to validate.</param>
+    /// <returns>A combined validation result from all strategies.</returns>
+    /// <remarks>
+    /// This method uses all registered validation strategies by default.
+    /// To use specific strategies, call the context's Validate method directly.
+    /// </remarks>
+    public ValidationResult ValidateEquipment(Equipment equipment)
+    {
+        ArgumentNullException.ThrowIfNull(equipment, nameof(equipment));
+        return _validationContext.Validate(equipment);
+    }
+
+    /// <summary>
+    /// Gets the validation context for this service.
+    /// </summary>
+    /// <returns>The IValidationContext instance used by this service.</returns>
+    public IValidationContext GetValidationContext()
+    {
+        return _validationContext;
+    }
+
+    /// <summary>
     /// Adds the specified equipment to the service's internal collection and assigns it a unique identifier.
     /// </summary>
     /// <param name="equipment">The equipment to add. This instance will have its <c>Id</c> property set by the method.</param>
@@ -57,8 +89,15 @@ public class EquipmentService
     /// synchronize access if multiple threads may call it concurrently.
     /// </remarks>
     /// <exception cref="System.NullReferenceException">Thrown if <paramref name="equipment"/> is <c>null</c>.</exception>
+    /// <exception cref="ValidationException">Thrown if equipment fails validation.</exception>
     public void AddEquipment(Equipment equipment)
     {
+        var validationResult = ValidateEquipment(equipment);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult);
+        }
+
         equipment.Id = _nextEquipmentId++;
         _equipments.Add(equipment);
     }
